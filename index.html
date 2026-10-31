@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Synthesizer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+
+<link rel="stylesheet" href="stylesheets/style.css" />
+</head>
+<body data-mode="world">
+<div class="scene">
+
+  <div class="scene__bg scene__bg--world" aria-hidden="true"></div>
+  <div class="scene__bg scene__bg--upside" aria-hidden="true"></div>
+  <div class="scene__glow" aria-hidden="true"></div>
+  <div class="scene__spores" id="spores" aria-hidden="true"></div>
+  <div class="scene__flash" aria-hidden="true"></div>
+
+  <main class="synth">
+
+    <header class="panel panel--dark transport" id="transport">
+      <div class="transport__group transport__group--tempo">
+        <label class="transport__name" for="tempo-slider">BPM</label>
+        <input class="slider" id="tempo-slider" type="range" min="60" max="180" step="1" data-param="tempo" title="Темп">
+        <output class="transport__value" id="tempo-value" for="tempo-slider">84</output>
+      </div>
+
+      <div class="transport__group transport__group--master">
+        <button type="button" class="icon-btn" id="btn-mute" aria-pressed="false" aria-label="Выключить звук" title="Выключить звук">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+            <path class="icon-btn__body" d="M3 9v6h4l5 4V5L7 9H3z"/>
+            <path class="icon-btn__wave" d="M15.5 8.5a5 5 0 0 1 0 7" fill="none" stroke-width="2" stroke-linecap="round"/>
+            <path class="icon-btn__cross" d="M15 9l6 6M21 9l-6 6" fill="none" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <input class="slider" type="range" min="0" max="1" step="0.01" data-param="master" aria-label="Общая громкость" title="Общая громкость">
+      </div>
+    </header>
+    <div class="row row--sources">
+
+      <section class="panel voice" id="synth1" data-accent="red" aria-labelledby="synth1-title">
+        <header class="panel__header">
+          <span class="panel__dot" aria-hidden="true"></span>
+          <h2 class="panel__title" id="synth1-title">SYNTH 1</h2>
+        </header>
+        <div class="wave-group" role="group" aria-label="Тип волны Synth 1" data-source="synth1">
+          <button type="button" class="wave-btn" data-wave="sine">sine</button>
+          <button type="button" class="wave-btn" data-wave="triangle">triangle</button>
+          <button type="button" class="wave-btn" data-wave="square">square</button>
+          <button type="button" class="wave-btn" data-wave="sawtooth">sawtooth</button>
+        </div>
+        <div class="voice__sliders">
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="synth1.attack"  aria-label="Synth 1: атака"      title="Атака — как быстро нарастает звук">
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="synth1.release" aria-label="Synth 1: затухание"  title="Затухание — как долго тянется звук после ноты">
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="ch-s1.pan"      aria-label="Synth 1: панорама"   title="Панорама — левее или правее">
+        </div>
+      </section>
+
+  
+      <section class="panel voice" id="synth2" data-accent="green" aria-labelledby="synth2-title">
+        <header class="panel__header">
+          <span class="panel__dot" aria-hidden="true"></span>
+          <h2 class="panel__title" id="synth2-title">SYNTH 2</h2>
+        </header>
+        <div class="wave-group" role="group" aria-label="Тип волны Synth 2" data-source="synth2">
+          <button type="button" class="wave-btn" data-wave="sine">sine</button>
+          <button type="button" class="wave-btn" data-wave="triangle">triangle</button>
+          <button type="button" class="wave-btn" data-wave="square">square</button>
+          <button type="button" class="wave-btn" data-wave="sawtooth">sawtooth</button>
+        </div>
+        <div class="voice__sliders">
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="synth2.attack"  aria-label="Synth 2: атака"      title="Атака — как быстро нарастает звук">
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="synth2.release" aria-label="Synth 2: затухание"  title="Затухание — как долго тянется звук после ноты">
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="ch-s2.pan"      aria-label="Synth 2: панорама"   title="Панорама — левее или правее">
+        </div>
+      </section>
+
+      <section class="panel voice" id="drums" data-accent="yellow" aria-labelledby="drums-title">
+        <header class="panel__header">
+          <span class="panel__dot" aria-hidden="true"></span>
+          <h2 class="panel__title" id="drums-title">DRUMS</h2>
+        </header>
+        <canvas class="visualizer" id="drums-visualizer" aria-hidden="true"></canvas>
+        <div class="voice__sliders">
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="drums.kick"  aria-label="Drums: громкость kick"  title="Kick — бочка">
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="drums.snare" aria-label="Drums: громкость snare" title="Snare — малый барабан">
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="drums.hat"   aria-label="Drums: громкость hat"   title="Hat — тарелка">
+        </div>
+      </section>
+    </div>
+
+  
+    <div class="row row--effects">
+
+      <section class="panel fx" id="fx-distortion" data-accent="red" data-on="true" aria-labelledby="fx-distortion-title">
+        <header class="panel__header">
+          <button type="button" class="panel__dot fx__led" aria-pressed="true" aria-label="Distortion: включить или выключить"></button>
+          <h2 class="panel__title" id="fx-distortion-title">DISTORTION</h2>
+        </header>
+        <div class="fx__body">
+  
+          <svg class="fx__display" viewBox="0 0 155 45" aria-hidden="true">
+            <path class="fx-art fx-art--wave" d="M0 22 C8 4 23 4 31 22 S54 40 62 22 S85 4 93 22 S116 40 124 22 S147 4 155 22 S178 40 186 22 S209 4 217 22 S240 40 248 22"/>
+          </svg>
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="fx-distortion.amount" aria-label="Distortion: количество" title="Distortion — грязь и перегруз">
+        </div>
+      </section>
+
+      <section class="panel fx" id="fx-delay" data-accent="green" data-on="true" aria-labelledby="fx-delay-title">
+        <header class="panel__header">
+          <button type="button" class="panel__dot fx__led" aria-pressed="true" aria-label="Delay: включить или выключить"></button>
+          <h2 class="panel__title" id="fx-delay-title">DELAY</h2>
+        </header>
+        <div class="fx__body">
+          
+          <svg class="fx__display" viewBox="0 0 155 45" aria-hidden="true">
+            <circle class="fx-art fx-art--echo" style="--i:0" cx="14"  cy="9"  r="4"/>
+            <circle class="fx-art fx-art--echo" style="--i:1" cx="36"  cy="17" r="3.5"/>
+            <circle class="fx-art fx-art--echo" style="--i:2" cx="58"  cy="25" r="3"/>
+            <circle class="fx-art fx-art--echo" style="--i:3" cx="80"  cy="32" r="2.5"/>
+            <circle class="fx-art fx-art--echo" style="--i:4" cx="102" cy="38" r="2"/>
+          </svg>
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="fx-delay.amount" aria-label="Delay: количество" title="Delay — эхо">
+        </div>
+      </section>
+
+      <section class="panel fx" id="fx-reverb" data-accent="yellow" data-on="true" aria-labelledby="fx-reverb-title">
+        <header class="panel__header">
+          <button type="button" class="panel__dot fx__led" aria-pressed="true" aria-label="Reverb: включить или выключить"></button>
+          <h2 class="panel__title" id="fx-reverb-title">REVERB</h2>
+        </header>
+        <div class="fx__body">
+          
+          <svg class="fx__display" viewBox="0 0 155 45" aria-hidden="true">
+            <path class="fx-art fx-art--room" stroke-width="3.4" stroke-linecap="round"
+              d="M10 8h.01M26 12h.01M44 7h.01M58 14h.01M74 9h.01M90 13h.01M106 8h.01M122 12h.01M140 9h.01
+                 M16 22h.01M34 26h.01M50 20h.01M66 27h.01M82 22h.01M98 28h.01M114 21h.01M130 26h.01M146 22h.01
+                 M10 36h.01M28 39h.01M46 34h.01M62 38h.01M78 35h.01M96 39h.01M112 35h.01M128 38h.01M144 35h.01"/>
+          </svg>
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="fx-reverb.amount" aria-label="Reverb: количество" title="Reverb — эффект большой комнаты">
+        </div>
+      </section>
+
+      <section class="panel fx" id="fx-glitch" data-accent="yellow" data-on="false" aria-labelledby="fx-glitch-title">
+        <header class="panel__header">
+          <button type="button" class="panel__dot fx__led" aria-pressed="false" aria-label="Glitch: включить или выключить"></button>
+          <h2 class="panel__title" id="fx-glitch-title">GLITCH</h2>
+        </header>
+        <div class="fx__body">
+         
+          <svg class="fx__display" viewBox="0 0 155 45" aria-hidden="true">
+            <rect class="fx-art fx-art--bar" style="--i:0"  x="6"   y="26" width="3.4" height="14"/>
+            <rect class="fx-art fx-art--bar" style="--i:1"  x="13"  y="14" width="3.4" height="26"/>
+            <rect class="fx-art fx-art--bar" style="--i:2"  x="20"  y="30" width="3.4" height="10"/>
+            <rect class="fx-art fx-art--bar" style="--i:3"  x="27"  y="6"  width="3.4" height="34"/>
+            <rect class="fx-art fx-art--bar" style="--i:4"  x="34"  y="20" width="3.4" height="20"/>
+            <rect class="fx-art fx-art--bar" style="--i:5"  x="41"  y="10" width="3.4" height="30"/>
+            <rect class="fx-art fx-art--bar" style="--i:6"  x="48"  y="32" width="3.4" height="8"/>
+            <rect class="fx-art fx-art--bar" style="--i:7"  x="55"  y="4"  width="3.4" height="36"/>
+            <rect class="fx-art fx-art--bar" style="--i:8"  x="62"  y="18" width="3.4" height="22"/>
+            <rect class="fx-art fx-art--bar" style="--i:9"  x="69"  y="8"  width="3.4" height="32"/>
+            <rect class="fx-art fx-art--bar" style="--i:10" x="76"  y="28" width="3.4" height="12"/>
+            <rect class="fx-art fx-art--bar" style="--i:11" x="83"  y="12" width="3.4" height="28"/>
+            <rect class="fx-art fx-art--bar" style="--i:12" x="90"  y="24" width="3.4" height="16"/>
+            <rect class="fx-art fx-art--bar" style="--i:13" x="97"  y="5"  width="3.4" height="35"/>
+            <rect class="fx-art fx-art--bar" style="--i:14" x="104" y="22" width="3.4" height="18"/>
+            <rect class="fx-art fx-art--bar" style="--i:15" x="111" y="10" width="3.4" height="30"/>
+            <rect class="fx-art fx-art--bar" style="--i:16" x="118" y="30" width="3.4" height="10"/>
+            <rect class="fx-art fx-art--bar" style="--i:17" x="125" y="16" width="3.4" height="24"/>
+            <rect class="fx-art fx-art--bar" style="--i:18" x="132" y="26" width="3.4" height="14"/>
+            <rect class="fx-art fx-art--bar" style="--i:19" x="139" y="8"  width="3.4" height="32"/>
+            <rect class="fx-art fx-art--bar" style="--i:20" x="146" y="20" width="3.4" height="20"/>
+          </svg>
+          <input class="slider" type="range" min="0" max="1" step="0.01" data-param="fx-glitch.amount" aria-label="Glitch: количество" title="Glitch — «рубит» звук на куски">
+        </div>
+      </section>
+    </div>
+
+    
+    <div class="row row--bottom">
+
+      
+      <div class="mixer">
+        <section class="panel panel--dark channel" id="ch-s1" data-accent="red" aria-label="Канал S1">
+          <h3 class="channel__title">S1</h3>
+          <div class="channel__body">
+            <div class="fader"><input class="slider" type="range" min="0" max="1" step="0.01" data-param="ch-s1.volume" aria-label="Канал S1: громкость" title="Громкость Synth 1"></div>
+            <div class="meter" data-meter="ch-s1" aria-hidden="true">
+              <span class="meter__dot"></span><span class="meter__dot"></span><span class="meter__dot"></span><span class="meter__dot"></span><span class="meter__dot"></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--dark channel" id="ch-s2" data-accent="green" aria-label="Канал S2">
+          <h3 class="channel__title">S2</h3>
+          <div class="channel__body">
+            <div class="fader"><input class="slider" type="range" min="0" max="1" step="0.01" data-param="ch-s2.volume" aria-label="Канал S2: громкость" title="Громкость Synth 2"></div>
+            <div class="meter" data-meter="ch-s2" aria-hidden="true">
+              <span class="meter__dot"></span><span class="meter__dot"></span><span class="meter__dot"></span><span class="meter__dot"></span><span class="meter__dot"></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--dark channel" id="ch-dr" data-accent="yellow" aria-label="Канал DR">
+          <h3 class="channel__title">DR</h3>
+          <div class="channel__body">
+            <div class="fader"><input class="slider" type="range" min="0" max="1" step="0.01" data-param="ch-dr.volume" aria-label="Канал DR: громкость" title="Громкость барабанов"></div>
+            <div class="meter" data-meter="ch-dr" aria-hidden="true">
+              <span class="meter__dot"></span><span class="meter__dot"></span><span class="meter__dot"></span><span class="meter__dot"></span><span class="meter__dot"></span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      
+      <section class="panel panel--dark sequencer" id="sequencer" aria-label="Секвенсор">
+        <div class="seq-row" id="seq-row-s1"            data-track="s1"    role="group" aria-label="Synth 1"></div>
+        <div class="seq-row" id="seq-row-s2"            data-track="s2"    role="group" aria-label="Synth 2"></div>
+        
+        <div class="seq-group" id="seq-row-dr" role="group" aria-label="Drums">
+          <div class="seq-row" id="seq-row-dr-kick"  data-track="kick"  role="group" aria-label="Kick"></div>
+          <div class="seq-row" id="seq-row-dr-snare" data-track="snare" role="group" aria-label="Snare"></div>
+          <div class="seq-row" id="seq-row-dr-hat"   data-track="hat"   role="group" aria-label="Hat"></div>
+        </div>
+      </section>
+
+      
+      <aside class="panel panel--dark controls" id="controls" aria-label="Управление">
+        
+        <button type="button" class="ctrl-btn ctrl-btn--play" id="btn-play" aria-pressed="false" aria-label="Играть / остановить" title="Играть / остановить">
+          <svg viewBox="0 0 28 30" width="28" height="30" aria-hidden="true"><path d="M3 2.5v25a1 1 0 0 0 1.5.9l21-12.5a1 1 0 0 0 0-1.8L4.5 1.6A1 1 0 0 0 3 2.5z"/></svg>
+        </button>
+       
+        <button type="button" class="ctrl-btn ctrl-btn--mode" id="btn-mode" aria-pressed="false" aria-label="Перейти в Изнанку" title="Мир / Изнанка">
+          <span class="ctrl-btn__circle" aria-hidden="true"></span>
+        </button>
+       
+        <button type="button" class="ctrl-btn ctrl-btn--reset" id="btn-reset" aria-label="Сбросить кружки" title="Сбросить кружки">
+          <span class="ctrl-btn__icon" aria-hidden="true"></span>
+        </button>
+      </aside>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/state.js"></script>
+<script src="js/audio-engine.js"></script>
+<script src="js/voices.js"></script>
+<script src="js/sequencer.js"></script>
+<script src="js/interface.js"></script>
+<script src="js/modes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
